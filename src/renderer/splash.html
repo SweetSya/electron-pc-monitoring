@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Splash Screen</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+
+    <link href="./assets/main.css" type="text/css" rel="stylesheet" />
+  </head>
+
+  <body class="">
+    <div id="app">
+      <img alt="logo" class="logo" src="./assets/electron.svg" />
+      <div class="text">
+        <span class="js">Computer Monitoring</span>
+        Application
+      </div>
+      <div class="creator">Created by SweetSya</div>
+
+      <ul class="versions">
+        <li class="app-version"></li>
+      </ul>
+    </div>
+
+    <script type="module" src="./src/renderer.js"></script>
+  </body>
+</html>

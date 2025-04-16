@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Computer Monitoring App</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+
+    <link href="./assets/main.css" type="text/css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="px-5 pt-3 pb-10 flex flex-col gap-5 w-screen h-full">
+        <div class="h-[180px] p-5">
+          <img class="w-full h-full object-contain" src="assets/electron.svg" alt="" />
+        </div>
+        <div class="h-fit flex gap-4">
+          <div class="flex-1/2">
+            <label class="inline-flex items-center me-5 cursor-pointer">
+              <input id="toggleRunAsAdmin" type="checkbox" value="" class="sr-only peer" />
+              <div
+                class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-400 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"
+              ></div>
+              <span class="pl-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >Always run app as <span class="text-blue-300">Administrator</span></span
+              >
+            </label>
+          </div>
+          <div class="flex-1/2">
+            <label class="inline-flex items-center me-5 cursor-pointer">
+              <input id="toggleRunAtStartup" type="checkbox" value="" class="sr-only peer" />
+              <div
+                class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-400 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"
+              ></div>
+              <span class="pl-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >Run monitoring at <span class="text-blue-300">Startup</span></span
+              >
+            </label>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="grow h-[200px] overflow-y-scroll">
+            <table class="w-full table border-x rounded-l-lg overflow-hidden">
+              <thead>
+                <tr class="sticky top-0 shadow bg-linear-to-r from-blue-800 to-purple-600">
+                  <td class="px-4 py-2 w-[1px]"><input type="checkbox" /></td>
+                  <td class="px-2 py-2">Key</td>
+                  <td class="px-2 py-2">Value</td>
+                </tr>
+              </thead>
+              <tbody class="table-data">
+                <!-- <tr class="border-b border-white/30">
+                  <td class="px-4 py-2"><input type="checkbox" /></td>
+                  <td class="px-2 py-2">Key 1</td>
+                  <td class="px-2 py-2">Value 1</td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div
+        class="fixed bottom-0 left-0 w-screen px-2 py-1 bg-linear-to-r from-blue-800/80 to-purple-600/80 text-xs text-center"
+      >
+        <p>github@SweetSya. Monitoring App v1.0</p>
+      </div>
+    </div>
+    <script type="module" src="./src/renderer.js"></script>
+  </body>
+</html>
