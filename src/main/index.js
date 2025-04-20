@@ -55,20 +55,74 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
-
-function initiateIPCListener() {
-  // Listen for toggle administrator change
-  ipcMain.on('ipc-run-as-administrator', (event, state) => {
-    console.log(`State Administrator : ${state}`)
+function initiateMonitoringModule() {
+  const python = spawn('python', [
+    './src/external/py-monitoring/initiate-monitoring-module.py',
+    '--state',
+    'true'
+  ])
+  python.stdout.on('data', (data) => {
+    console.log(data.toString())
   })
+  python.on('error', (err) => {
+    reject(`Failed to start Python process: ${err.message}`)
+  })
+}
+function initiateIPCListener() {
   // Listen for toggle startup change
   ipcMain.on('ipc-run-at-startup', (event, state) => {
     console.log(`State Startup: ${state}`)
+    const python = spawn('python', [
+      './src/external/py-monitoring/startup-monitoring-module.py',
+      '--state',
+      state
+    ])
+    python.stdout.on('data', (data) => {
+      console.log(data.toString())
+    })
+    python.on('error', (err) => {
+      reject(`Failed to start Python process: ${err.message}`)
+    })
+  })
+  // Listen for toggle start monitoring
+  ipcMain.handle('ipc-start-monitoring', async (event, args) => {
+    return new Promise((resolve, reject) => {
+      console.log(`Start Monitoring: ${args.state}`)
+
+      const python = spawn('python', [
+        './src/external/py-monitoring/initiate-monitoring-module.py',
+        '--state',
+        args.state
+      ])
+
+      let output = ''
+      let error = ''
+
+      python.stdout.on('data', (data) => {
+        output += data.toString() // accumulate output
+      })
+
+      python.stderr.on('data', (data) => {
+        error += data.toString() // accumulate errors
+      })
+
+      python.on('close', (code) => {
+        if (code === 0) {
+          resolve(output) // return to renderer
+        } else {
+          reject(error || `Python exited with code ${code}`)
+        }
+      })
+
+      python.on('error', (err) => {
+        reject(`Failed to start Python process: ${err.message}`)
+      })
+    })
   })
   // Listen for populate table call
   ipcMain.handle('ipc-populate-table-request', async (event) => {
     return new Promise((resolve, reject) => {
-      const python = spawn('python', ['./src/external/py-monitoring/main.py'])
+      const python = spawn('python', ['./src/external/py-monitoring/monitor-module.py'])
 
       let output = ''
       let error = ''
@@ -112,6 +166,7 @@ app.whenReady().then(() => {
 
   createWindow()
   initiateIPCListener()
+  initiateMonitoringModule()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

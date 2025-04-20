@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Computer Monitoring App</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+
+    <link href="../assets/main.css" type="text/css" rel="stylesheet" />
+    <link href="../assets/builder.css" type="text/css" rel="stylesheet" />
+    <link
+      href="../assets/vendor/tabler-icons/tabler-icons.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" type="text/css" rel="stylesheet" />
+    <script src="/node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
+    <script src="/node_modules/gridstack/dist/es5/gridstack-all.js"></script>
+  </head>
+
+  <body>
+    <div class="fixed left-0 top-0 w-full">
+      <nav
+        class="flex px-5 py-3 text-white bg-linear-to-r from-blue-800/80 to-purple-600/80"
+        aria-label="Breadcrumb"
+      >
+        <ol class="inline-flex gap-1 items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+          <li class="inline-flex items-center">
+            <a
+              href="../index.html"
+              class="inline-flex gap-1 items-center text-sm font-medium text-white hover:text-white/70"
+            >
+              <i class="ti ti-home pb-.5"></i>
+              Home
+            </a>
+          </li>
+          <li class="inline-flex items-center">
+            <a
+              href="../builder.html"
+              class="inline-flex gap-1 items-center text-sm font-medium text-white hover:text-white/70"
+            >
+              <i class="ti ti-chevron-right"></i>
+              <span class="">Interface Builder</span>
+            </a>
+          </li>
+          <li aria-current="page">
+            <div class="flex items-center gap-1">
+              <i class="ti ti-chevron-right"></i>
+              <span class="ms-1 text-sm font-medium text-white/70 md:ms-2">Active State</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div id="sub-app">
+      <div class="">
+        <div class="flex justify-between">
+          <h1>Modify <span class="font-bold text-blue-400">"Active State"</span></h1>
+          <h1>Tools <i class="ti ti-tools"></i></h1>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-nowrap pt-3">
+        <div class="border border-white/50 bg-black/30 rounded">
+          <div id="grid-container" class="grid-softlines">
+            <div id="grid-stack"></div>
+          </div>
+        </div>
+        <div
+          class="grow bg-linear-to-br from-blue-800/80 to-purple-600/80 rounded overflow-y-scroll"
+        >
+          <div class="w-full p-2 flex flex-col">
+            <div class="pb-2 mb-2">
+              <h2 class="font-bold">Block</h2>
+              <hr class="pb-2" />
+              <div class="swiper swiper-box">
+                <div class="swiper-wrapper">
+                  <div class="dragable-in swiper-slide !w-[60px] border cursor-grab">
+                    <div class="bg-white/30 !h-[40px] flex justify-center items-center">
+                      <i class="ti ti-plus"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fixed bottom-0 left-0 w-screen px-2 py-1 bg-linear-to-r from-blue-800/80 to-purple-600/80 text-xs text-center"
+    >
+      <p>github@SweetSya. Monitoring App v1.0</p>
+    </div>
+    <script type="module" src="../src/builder.js"></script>
+  </body>
+</html>

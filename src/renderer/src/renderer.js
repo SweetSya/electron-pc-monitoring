@@ -4,23 +4,32 @@ function init() {
     doAThing()
     populateTable()
 
-    // Listen for Run as Admin Toogle
-    const toggleRunAsAdmin = document.querySelector('#toggle-run-as-admin')
-    toggleRunAsAdmin.addEventListener('change', () => {
-      localStorage.setItem('run_as_admin', toggleRunAsAdmin.checked)
-      // window.electron.ipcRenderer.send('ipc-run-as-administrator', toggleRunAsAdmin.checked)
-    })
     // Listen for Run at Startup Toogle
     const toggleRunAtStartup = document.querySelector('#toggle-run-at-startup')
     toggleRunAtStartup.addEventListener('change', () => {
       localStorage.setItem('run_at_startup', toggleRunAtStartup.checked)
-      // window.electron.ipcRenderer.send('ipc-run-at-startup', toggleRunAtStartup.checked)
+      window.electron.ipcRenderer.send('ipc-run-at-startup', toggleRunAtStartup.checked)
     })
     // Listen for Start Monitoring Toggle
     const toggleStartMonitoring = document.querySelector('#toggle-start-monitoring')
     toggleStartMonitoring.addEventListener('change', () => {
       localStorage.setItem('start_monitoring', toggleStartMonitoring.checked)
-      // window.electron.ipcRenderer.send('ipc-run-at-startup', toggleStartMonitoring.checked)
+      toggleStartMonitoring.parentElement.classList.add('pointer-events-none', 'opacity-50')
+      window.electron.ipcRenderer
+        .invoke('ipc-start-monitoring', { state: toggleStartMonitoring.checked })
+        .then((result) => {
+          console.log(`Monitoring .exe : ${result}`)
+          let timeout = 3000;
+          if(result == 'killed') {
+            timeout = 6000;
+          }
+          setTimeout(() => {
+            toggleStartMonitoring.parentElement.classList.remove(
+              'pointer-events-none',
+              'opacity-50'
+            )
+          }, timeout)
+        })
     })
   })
 }

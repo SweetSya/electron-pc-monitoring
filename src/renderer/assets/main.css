@@ -1,36 +1,29 @@
 @import './base.css';
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   background-image: url('./wavy-lines.svg');
   background-size: cover;
   user-select: none;
 }
-
+#app-splash {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#sub-app {
+  margin-top: 45px;
+  padding: 10px;
+  height: calc(100vh - 45px - 25px);
+}
 code {
   font-weight: 600;
   padding: 3px 5px;
   border-radius: 2px;
   background-color: var(--color-background-mute);
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    SF Mono,
-    Menlo,
-    Consolas,
-    Liberation Mono,
-    monospace;
-  font-size: 85%;
-}
-
-#app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 
 .logo {
@@ -159,4 +152,9 @@ code {
   .actions {
     display: none;
   }
+}
+
+.ti {
+  text-align: center;
+  vertical-align: middle;
 }

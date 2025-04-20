@@ -19,16 +19,12 @@
           <img class="w-full h-full object-contain" src="assets/electron.svg" alt="" />
         </div>
         <div class="h-fit flex flex-wrap">
-          <div class="w-1/2 pb-2">
-            <label class="inline-flex items-center me-5 cursor-pointer">
-              <input id="toggle-run-as-admin" type="checkbox" value="" class="sr-only peer" />
-              <div
-                class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-400 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"
-              ></div>
-              <span class="pl-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >Always run app as <span class="text-blue-300">Administrator</span></span
-              >
-            </label>
+          <div class="w-full pb-6 text-center">
+            <a
+              href="builder.html"
+              class="hover:bg-linear-to-r hover:from-blue-800 hover:to-purple-600 cursor-pointer hover:border-transparent border-blue-500 border transition duration-200 p-2 rounded-lg"
+              >Open Interface Builder</a
+            >
           </div>
           <div class="w-1/2 pb-2">
             <label class="inline-flex items-center me-5 cursor-pointer">
@@ -36,14 +32,21 @@
               <div
                 class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-400 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"
               ></div>
-              <span class="pl-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              <span
+                class="monitoring-text pl-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >Run monitoring at <span class="text-blue-300">Startup</span></span
               >
             </label>
           </div>
           <div class="w-1/2 pb-2">
             <label class="inline-flex items-center me-5 cursor-pointer">
-              <input id="toggle-start-monitoring" type="checkbox" value="" class="sr-only peer" />
+              <input
+                id="toggle-start-monitoring"
+                type="checkbox"
+                value=""
+                checked
+                class="sr-only peer"
+              />
               <div
                 class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-400 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"
               ></div>
@@ -73,12 +76,13 @@
           </div>
         </div>
       </div>
-      <div
-        class="fixed bottom-0 left-0 w-screen px-2 py-1 bg-linear-to-r from-blue-800/80 to-purple-600/80 text-xs text-center"
-      >
-        <p>github@SweetSya. Monitoring App v1.0</p>
-      </div>
     </div>
+    <div
+      class="fixed bottom-0 left-0 w-screen px-2 py-1 bg-linear-to-r from-blue-800/80 to-purple-600/80 text-xs text-center"
+    >
+      <p>github@SweetSya. Monitoring App v1.0</p>
+    </div>
+    <!-- <script src="./assets/vendor/gridstack/gridstack-all.js"></script> -->
     <script type="module" src="./src/renderer.js"></script>
   </body>
 </html>
