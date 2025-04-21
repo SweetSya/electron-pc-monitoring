@@ -21,10 +21,10 @@ function init() {
         },
         removable: '#trash',
         children: grid_list,
-        column: 8,
-        row: 8,
-        maxRow: 8,
-        cellHeight: 40,
+        column: 16,
+        row: 16,
+        maxRow: 16,
+        cellHeight: 20,
         float: true,
         margin: 2,
         placeholderClass: 'bg-white/20'
@@ -32,12 +32,15 @@ function init() {
       '#grid-stack'
     )
     let insert = {
-      block: {
-        box: [{ content: ' ' }]
-      }
+      block: [
+        {
+          content:
+            '<i onclick="console.log("wda")" class="edit-content ti ti-edit cursor-pointer absolute w-[20px] h-[20px] -right-[11px] -top-[11px] font-bold bg-white text-lg"><i>'
+        }
+      ]
     }
-    GridStack.setupDragIn('.block-dragable-in', undefined, insert.block.box)
-    
+    GridStack.setupDragIn('.block-dragable-in', undefined, insert.block)
+
     grid.on('change', function (event, items) {
       const allCoords = grid.engine.nodes.map((node) => ({
         id: node.el.id || null,
