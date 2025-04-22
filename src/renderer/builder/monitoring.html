@@ -53,10 +53,57 @@
       </nav>
     </div>
     <div id="sub-app">
-      <div class="">
+      <!-- Drawer Component -->
+      <div
+        id="drawer-edit"
+        class="fixed top-0 left-0 z-40 h-screen w-80 overflow-y-auto transition-transform -translate-x-full bg-gray-700"
+        tabindex="-1"
+      >
+        <!-- Header -->
+        <div class="flex w-full p-4 justify-between items-center mb-6 border-b border-white">
+          <h5 class="text-base font-semibold text-white uppercase inline-flex items-center">
+            <i class="ti ti-edit pe-2"></i>Edit Section
+          </h5>
+          <button
+            type="button"
+            class="close-drawer-edit absolute top-2.5 right-2.5 w-8 h-8 text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg flex items-center justify-center"
+          >
+            <i class="ti ti-x"></i>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+        <!-- Main Drawer Content -->
+        <div class="p-4">
+          <select
+            id="content-type"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option value="">Select type of content..</option>
+            <optgroup label="Custom">
+              <option value="custom-text">Text</option>
+              <option value="custom-image">Image</option>
+            </optgroup>
+            <optgroup label="Monitoring">
+              <option value="monitoring-value">Value</option>
+              <option value="monitoring-graph">Graph</option>
+            </optgroup>
+            <option value="blank">Blank Box</option>
+          </select>
+        </div>
+        <div id="content-custom-text" class="content-type-section hidden p-4">text</div>
+        <div id="content-custom-image" class="content-type-section hidden p-4">image</div>
+        <div id="content-monitoring-value" class="content-type-section hidden p-4">value</div>
+      </div>
+
+      <div>
         <div class="flex justify-between">
-          <h1>Modify Interface <p class="font-bold text-blue-400 text-xs">"Active State"</p></h1>
-          <h1 class="text-end">Tools <i class="ti ti-tools"></i><p class="text-xs">Drag to insert</p></h1>
+          <h1>
+            Modify Interface <span class="font-bold text-blue-400 text-xs">"Active State"</span>
+          </h1>
+          <h1 class="text-end">
+            Tools <i class="ti ti-tools"></i>
+            <p class="text-xs">Drag to insert</p>
+          </h1>
         </div>
       </div>
       <div class="flex gap-3 flex-nowrap pt-3">
@@ -65,23 +112,26 @@
             <div id="grid-stack"></div>
           </div>
         </div>
-        <div id="tools-menu" class="grow bg-linear-to-br from-blue-800/80 to-purple-600/80 rounded">
+        <div id="tools-menu" class="grow bg-gray-700/80 rounded">
           <div id="main" class="w-full h-full p-2 flex flex-col overflow-y-scroll">
             <div class="pb-2 mb-2">
-              <h2 class="text-xs pb-2">Layouting</i></h2>
+              <h2 class="text-xs pb-2">Layouting</h2>
               <div class="flex flex-wrap gap-2 justify-between">
                 <div class="block-dragable-in !w-[60px] border cursor-grab">
-                  <div class="bg-white/30 !h-[40px] flex justify-center items-center text-xs">Block</div>
+                  <div class="bg-white/30 !h-[40px] flex justify-center items-center text-xs">
+                    Block
+                  </div>
                 </div>
               </div>
-
             </div>
           </div>
           <div
             id="trash"
             class="hidden w-full h-full p-2 justify-center items-center flex-col group"
           >
-            <div class="pb-2 mb-2 text-center group-hover:scale-90 group-hover:opacity-65 group-hover:text-red-200 transition duration-150">
+            <div
+              class="pb-2 mb-2 text-center group-hover:scale-90 group-hover:opacity-65 group-hover:text-red-200 transition duration-150"
+            >
               <h1 class="font-semibold tracking-widest text-2xl">Drag here</h1>
               <i class="ti ti-trash text-7xl"></i>
               <h1 class="font-semibold tracking-widest text-2xl">to Remove</h1>
