@@ -10,6 +10,7 @@ function init() {
       return JSON.parse(localStorage.getItem(key))
     }
     const local_set = (key, data) => {
+      console.log('SAVING')
       return localStorage.setItem(key, JSON.stringify(data))
     }
     let toolsMenu = document.querySelector('#tools-menu')
@@ -42,7 +43,7 @@ function init() {
       block: [
         {
           content:
-            '<i class="edit-content ti ti-pencil cursor-pointer absolute w-[20px] h-[20px] -right-[11px] -top-[11px] font-bold bg-white text-lg"><i>'
+            '<i class="edit-content ti ti-pencil cursor-pointer absolute w-[20px] h-[20px] -right-[11px] -top-[11px] font-bold bg-white text-lg"></i><div class="box-content text-white w-full h-full flex"><div>'
         }
       ]
     }
@@ -50,6 +51,7 @@ function init() {
     // set the drawer menu element
     const drawerTargetEl = document.getElementById('drawer-edit')
     const drawerContentTypeSelect = drawerTargetEl.querySelector('#content-type')
+    const buttonContentSave = drawerTargetEl.querySelector('#content-save')
     drawerContentTypeSelect.addEventListener('change', (e) => {
       // remove all shown
       drawerTargetEl.querySelectorAll('.content-type-section.flex').forEach((item) => {
@@ -57,12 +59,27 @@ function init() {
         item.classList.add('hidden')
       })
       if (!e.target.value || e.target.value === '') {
+        // remove btn
+        buttonContentSave.classList.add('hidden')
         return
       }
+      // add btn
+      buttonContentSave.classList.remove('hidden')
       // add flex
       let section = drawerTargetEl.querySelector(`#content-${e.target.value}`)
       section.classList.add('flex')
       section.classList.remove('hidden')
+    })
+
+    buttonContentSave.addEventListener('click', (e) => {
+      // get content
+      let content_value = drawerTargetEl.querySelector('.content-type-section.flex .content-value')
+        ? drawerTargetEl.querySelector('.content-type-section.flex .content-value').value
+        : ''
+      let id_box = e.currentTarget.dataset.grid
+      document.querySelector(`#${id_box} .box-content`).innerHTML = drawerTargetEl.querySelector(
+        '.content-type-section.flex input'
+      ).value
     })
 
     // options with default values
@@ -77,6 +94,11 @@ function init() {
         // Remove editing box id
         delete drawerTargetEl.dataset.editing
         drawerContentTypeSelect.value = ''
+        drawerTargetEl.querySelectorAll('.content-type-section.flex').forEach((item) => {
+          item.classList.remove('flex')
+          item.classList.add('hidden')
+        })
+        local_set('grids', all_grid_content())
       },
       onShow: () => {
         console.log('drawer is shown')
@@ -95,39 +117,36 @@ function init() {
     document.querySelector('.close-drawer-edit').addEventListener('click', () => {
       drawer.hide()
     })
+    grid.on('removed', (event, items) => {
+      local_set('grids', all_grid_content())
+    })
     grid.on('added', (event, items) => {
       // add id to the new grid box
+      let id = 'grid-' + Date.now()
       items.forEach((item) => {
-        item.el.id = 'grid-' + Date.now()
+        item.el.id = id
       })
+
+      local_set('grids', all_grid_content())
       // add listener for edit content of the grid box
-      document.querySelectorAll('.edit-content').forEach((element) => {
-        element.addEventListener('click', (e) => {
-          let box_id = e.target.parentElement.parentElement.id
-          let grid_boxes = local_get('grid_boxes') || []
-          const item = grid_boxes.find((obj) => obj.id === box_id)
-          if (item) {
-            // Prepare drawer here
-            console.log('prepare drawer')
-          }
-          drawerTargetEl.dataset.editing = box_id
-          drawer.show()
-        })
+      let edit_buttons = document.querySelectorAll('.edit-content')
+      edit_buttons[edit_buttons.length - 1].addEventListener('click', (e) => {
+        let box_id = e.target.parentElement.parentElement.id
+        let grid_boxes = local_get('grid_boxes') || []
+        const item = grid_boxes.find((obj) => obj.id === box_id)
+        if (item) {
+          // Prepare drawer here
+          console.log('prepare drawer')
+        }
+        drawerTargetEl.querySelector('#content-save').dataset.grid = box_id
+        drawer.show()
       })
     })
     grid.on('change', (event, items) => {
-      const allCoords = grid.engine.nodes.map((node) => ({
-        id: node.el.id || null,
-        x0: node.x * eachBlock.width,
-        x1: node.x * eachBlock.width + node.w * eachBlock.width,
-        y0: node.y * eachBlock.height,
-        y1: node.y * eachBlock.height + node.h * eachBlock.height,
-        w: node.w * eachBlock.width,
-        h: node.h * eachBlock.height
-      }))
-
-      console.log('All widget coordinates:', allCoords)
+      local_set('grids', all_grid_content())
+      console.log(all_grid_content())
     })
+    // Toogle trash box
     const toogleTrash = (state) => {
       if (state == true) {
         toolsMenu.querySelector('#main').classList.remove('flex')
@@ -148,6 +167,49 @@ function init() {
     grid.on('dragstop', (event, items) => {
       toogleTrash(false)
     })
+    const all_grid_content = () => {
+      return grid.engine.nodes.map((node) => ({
+        id: node.el.id || null,
+        grid: {
+          coords: {
+            x0: node.x,
+            x1: node.x + node.w,
+            y0: node.y,
+            y1: node.y + node.h
+          },
+          w: node.w,
+          h: node.h
+        },
+        block: {
+          coords: {
+            x0: node.x * eachBlock.width,
+            x1: node.x * eachBlock.width + node.w * eachBlock.width,
+            y0: node.y * eachBlock.height,
+            y1: node.y * eachBlock.height + node.h * eachBlock.height
+          },
+          w: node.w * eachBlock.width,
+          h: node.h * eachBlock.height
+        },
+        class: '',
+        content: document.querySelector(`#${node.el.id}`).innerHTML
+      }))
+    }
+
+    // Check for local storage
+    if (local_get('grids')) {
+      local_get('grids').forEach((box) => {
+        const div = document.createElement('div')
+        div.id = box.id
+        div.classList.add('grid-stack-item')
+        div.innerHTML = box.content
+        grid.makeWidget(div, {
+          x: box.grid.coords.x0,
+          y: box.grid.coords.y0,
+          w: box.grid.w,
+          h: box.grid.h
+        })
+      })
+    }
   })
 }
 

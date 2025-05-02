@@ -56,7 +56,7 @@
       <!-- Drawer Component -->
       <div
         id="drawer-edit"
-        class="fixed top-0 left-0 z-40 h-screen w-80 overflow-y-auto transition-transform -translate-x-full bg-gray-700"
+        class="fixed top-0 left-0 z-40 h-screen w-80 overflow-y-auto transition-transform -translate-x-full bg-gray-800"
         tabindex="-1"
       >
         <!-- Header -->
@@ -73,28 +73,46 @@
           </button>
         </div>
         <!-- Main Drawer Content -->
-        <div class="p-4">
-          <select
-            id="content-type"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option value="">Select type of content..</option>
-            <optgroup label="Custom">
-              <option value="custom-text">Text</option>
-              <option value="custom-image">Image</option>
-            </optgroup>
-            <optgroup label="Monitoring">
-              <option value="monitoring-value">Value</option>
-              <option value="monitoring-graph">Graph</option>
-            </optgroup>
-            <option value="blank">Blank Box</option>
-          </select>
+        <div class="px-2 pt-4 pb-2">
+          <div class="pb-3">
+            <select
+              id="content-type"
+              class="border text-sm rounded-lg block w-full p-2.5 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select type of content..</option>
+              <optgroup label="Custom">
+                <option value="custom-text">Text</option>
+                <option value="custom-image">Image</option>
+              </optgroup>
+              <optgroup label="Monitoring">
+                <option value="monitoring-value">Value</option>
+                <option value="monitoring-graph">Graph</option>
+              </optgroup>
+              <option value="blank">Blank Box</option>
+            </select>
+          </div>
+          <div id="content-custom-text" class="content-type-section hidden">
+            <div class="flex flex-col px-.5 w-full">
+              <label class="pb-2">Enter value </label>
+              <input
+                type="text"
+                class="content-value border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+          <div id="content-custom-image" class="content-type-section hidden">image</div>
+          <div id="content-monitoring-value" class="content-type-section hidden">value</div>
+          <div class="py-3">
+            <button
+              id="content-save"
+              data-grid=""
+              class="hidden w-full cursor-pointer transition duration-150 hover:bg-blue-100 hover:text-black border py-1 px-2 rounded"
+            >
+              Apply customization
+            </button>
+          </div>
         </div>
-        <div id="content-custom-text" class="content-type-section hidden p-4">text</div>
-        <div id="content-custom-image" class="content-type-section hidden p-4">image</div>
-        <div id="content-monitoring-value" class="content-type-section hidden p-4">value</div>
       </div>
-
       <div>
         <div class="flex justify-between">
           <h1>
@@ -112,7 +130,7 @@
             <div id="grid-stack"></div>
           </div>
         </div>
-        <div id="tools-menu" class="grow bg-gray-700/80 rounded">
+        <div id="tools-menu" class="grow bg-gray-800/80 rounded">
           <div id="main" class="w-full h-full p-2 flex flex-col overflow-y-scroll">
             <div class="pb-2 mb-2">
               <h2 class="text-xs pb-2">Layouting</h2>
