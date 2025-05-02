@@ -1,6 +1,8 @@
 import 'gridstack/dist/gridstack.min.css'
 import { GridStack } from 'gridstack'
 import { Drawer } from 'flowbite'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.min.css'
 
 import { Swiper } from 'swiper'
 
@@ -71,17 +73,6 @@ function init() {
       section.classList.remove('hidden')
     })
 
-    buttonContentSave.addEventListener('click', (e) => {
-      // get content
-      let content_value = drawerTargetEl.querySelector('.content-type-section.flex .content-value')
-        ? drawerTargetEl.querySelector('.content-type-section.flex .content-value').value
-        : ''
-      let id_box = e.currentTarget.dataset.grid
-      document.querySelector(`#${id_box} .box-content`).innerHTML = drawerTargetEl.querySelector(
-        '.content-type-section.flex input'
-      ).value
-    })
-
     // options with default values
     const drawerOptions = {
       placement: 'left',
@@ -114,7 +105,87 @@ function init() {
       override: true
     }
     const drawer = new Drawer(drawerTargetEl, drawerOptions, drawerInstanceOptions)
+
+    // set the modal menu element
+    const modalBgTargetEl = document.getElementById('modal-background')
+
+    // options with default values
+    const modalBgOptions = {
+      placement: 'bottom-right',
+      backdrop: 'dynamic',
+      backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
+      closable: true,
+      onHide: () => {
+        console.log('modal is hidden')
+        // delete image
+        document.querySelector('#background-cropper').src
+        document.querySelector('#background-input').value = ''
+      },
+      onShow: () => {
+        console.log('modal is shown')
+      },
+      onToggle: () => {
+        console.log('modal has been toggled')
+      }
+    }
+
+    // instance options object
+    const modalBgInstanceOptions = {
+      id: 'modalEl',
+      override: true
+    }
+    const modalBg = new Modal(modalBgTargetEl, modalBgOptions, modalBgInstanceOptions)
+    document.querySelector('.close-modal-bg').addEventListener('click', () => {
+      modalBg.hide()
+    })
+    // set Image background canvas grid
+    const setBackgroundCanvas = () => {
+      let temp = local_get('canvas') // assuming this returns an object with .background base64 string
+
+      const img = new Image()
+      img.onload = function () {
+        const canvas = document.getElementById('background-canvas')
+        const ctx = canvas.getContext('2d')
+
+        const canvasWidth = canvas.width
+        const canvasHeight = canvas.height
+
+        const imgRatio = img.width / img.height
+        const canvasRatio = canvasWidth / canvasHeight
+
+        let drawWidth, drawHeight, offsetX, offsetY
+
+        if (imgRatio > canvasRatio) {
+          // Image is wider than canvas
+          drawHeight = canvasHeight
+          drawWidth = img.width * (canvasHeight / img.height)
+          offsetX = -(drawWidth - canvasWidth) / 2
+          offsetY = 0
+        } else {
+          // Image is taller than canvas
+          drawWidth = canvasWidth
+          drawHeight = img.height * (canvasWidth / img.width)
+          offsetX = 0
+          offsetY = -(drawHeight - canvasHeight) / 2
+        }
+
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight) // clear existing
+        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight)
+      }
+
+      img.src = temp.background
+    }
+
     document.querySelector('.close-drawer-edit').addEventListener('click', () => {
+      drawer.hide()
+    })
+    buttonContentSave.addEventListener('click', (e) => {
+      // get content
+      let content_value = drawerTargetEl.querySelector('.content-type-section.flex .content-value')
+        ? drawerTargetEl.querySelector('.content-type-section.flex .content-value').value
+        : ''
+      let id_box = e.currentTarget.dataset.grid
+      document.querySelector(`#${id_box} .box-content`).innerHTML = content_value
       drawer.hide()
     })
     grid.on('removed', (event, items) => {
@@ -167,6 +238,52 @@ function init() {
     grid.on('dragstop', (event, items) => {
       toogleTrash(false)
     })
+    // Cropper initiate
+    const cropperOptions = {
+      cropBoxResizable: true,
+      data: {
+        width: 480 / 2,
+        height: 320 / 2
+      },
+      dragMode: 'none',
+      center: true
+    }
+    let cropper = new Cropper(document.querySelector('#background-cropper img'), cropperOptions)
+    // Background input
+    document.querySelector('#background-input').addEventListener('change', (e) => {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = function () {
+        const base64DataUrl = reader.result
+        document.querySelector('#background-cropper img').remove()
+        document.querySelector('#background-cropper').innerHTML =
+          `<img src="${base64DataUrl}" alt="Picture" class="object-fit-contain scale-50" />`
+        cropper.destroy()
+        cropper = new Cropper(document.querySelector('#background-cropper img'), cropperOptions)
+      }
+
+      if (file) {
+        reader.readAsDataURL(file)
+      }
+      modalBg.show()
+    })
+    // save background image click
+    document.querySelector('#background-image-save').addEventListener('click', (e) => {
+      // Save get the cropped image
+      const canvas = cropper.getCroppedCanvas({
+        width: 480,
+        height: 320
+      })
+      // Convert to base64 image
+      const base64CroppedImage = canvas.toDataURL('image/png')
+      let temp = local_get('canvas')
+      console.log(temp)
+      temp.background = base64CroppedImage
+      local_set('canvas', temp)
+      setBackgroundCanvas()
+      modalBg.hide()
+    })
     const all_grid_content = () => {
       return grid.engine.nodes.map((node) => ({
         id: node.el.id || null,
@@ -191,11 +308,15 @@ function init() {
           h: node.h * eachBlock.height
         },
         class: '',
+        background: '',
         content: document.querySelector(`#${node.el.id}`).innerHTML
       }))
     }
 
     // Check for local storage
+    if (!local_get('canvas')) {
+      local_set('canvas', { background: '' })
+    }
     if (local_get('grids')) {
       local_get('grids').forEach((box) => {
         const div = document.createElement('div')

@@ -53,11 +53,51 @@
       </nav>
     </div>
     <div id="sub-app">
+      <!-- Modal Components for backgorund image crop -->
+      <div
+        id="modal-background"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      >
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div
+              class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200"
+            >
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                Background Image Cropper
+              </h3>
+              <button
+                type="button"
+                class="close-modal-bg absolute top-2.5 right-2.5 w-8 h-8 text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg flex items-center justify-center"
+              >
+                <i class="ti ti-x"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+              <div id="background-cropper" class=""><img id="cropper" src="" alt="Picture" /></div>
+            </div>
+            <!-- Modal footer -->
+            <div
+              class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+            >
+              <button
+                id="background-image-save"
+                class="w-full cursor-pointer transition duration-150 hover:bg-blue-100 hover:text-black border py-1 px-2 rounded"
+              >
+                Apply background
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Drawer Component -->
       <div
         id="drawer-edit"
         class="fixed top-0 left-0 z-40 h-screen w-80 overflow-y-auto transition-transform -translate-x-full bg-gray-800"
-        tabindex="-1"
       >
         <!-- Header -->
         <div class="flex w-full p-4 justify-between items-center mb-6 border-b border-white">
@@ -125,35 +165,46 @@
         </div>
       </div>
       <div class="flex gap-3 flex-nowrap pt-3">
-        <div class="border border-white/50 bg-black/30 rounded">
+        <div class="relative border border-white/50 rounded">
           <div id="grid-container" class="grid-softlines !overflow-visible">
             <div id="grid-stack"></div>
           </div>
+          <canvas id="background-canvas" class="absolute left-0 top-0 w-full h-full bg-black/40 -z-5"></canvas>
         </div>
-        <div id="tools-menu" class="grow bg-gray-800/80 rounded">
-          <div id="main" class="w-full h-full p-2 flex flex-col overflow-y-scroll">
-            <div class="pb-2 mb-2">
-              <h2 class="text-xs pb-2">Layouting</h2>
-              <div class="flex flex-wrap gap-2 justify-between">
-                <div class="block-dragable-in !w-[60px] border cursor-grab">
-                  <div class="bg-white/30 !h-[40px] flex justify-center items-center text-xs">
-                    Block
+        <div class="flex flex-col gap-2 w-full">
+          <div id="tools-menu" class="bg-gray-800/80 rounded">
+            <div id="main" class="w-full h-full p-2 flex flex-col overflow-y-scroll">
+              <div class="pb-2 mb-2">
+                <h2 class="text-xs pb-2">Layouting</h2>
+                <div class="flex flex-wrap gap-2 justify-between">
+                  <div class="block-dragable-in !w-[60px] border cursor-grab">
+                    <div class="bg-white/30 !h-[40px] flex justify-center items-center text-xs">
+                      Block
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            id="trash"
-            class="hidden w-full h-full p-2 justify-center items-center flex-col group"
-          >
             <div
-              class="pb-2 mb-2 text-center group-hover:scale-90 group-hover:opacity-65 group-hover:text-red-200 transition duration-150"
+              id="trash"
+              class="hidden w-full h-full p-2 justify-center items-center flex-col group"
             >
-              <h1 class="font-semibold tracking-widest text-2xl">Drag here</h1>
-              <i class="ti ti-trash text-7xl"></i>
-              <h1 class="font-semibold tracking-widest text-2xl">to Remove</h1>
+              <div
+                class="pb-2 mb-2 text-center group-hover:scale-90 group-hover:opacity-65 group-hover:text-red-200 transition duration-150"
+              >
+                <h1 class="font-semibold tracking-widest text-2xl">Drag here</h1>
+                <i class="ti ti-trash text-7xl"></i>
+                <h1 class="font-semibold tracking-widest text-2xl">to Remove</h1>
+              </div>
             </div>
+          </div>
+          <div class="grow bg-gray-800/80 rounded p-2">
+            <h2 class="text-xs pb-2">Background Settings</h2>
+            <input
+              class="block p-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              id="background-input"
+              type="file"
+            />
           </div>
         </div>
       </div>
