@@ -23,7 +23,10 @@
 .grid-stack-item {
   background-color: rgba(255, 255, 255, 0.1);
   color: black;
-  border: 0.5px solid gray;
+  border: .5px solid transparent !important;
+}
+.grid-stack-item:hover {
+  border: .5px solid rgba(255,255,255,1) !important;
 }
 .grid-stack-item-content {
   overflow: visible !important;
@@ -38,7 +41,7 @@
   width: 20px !important;
   height: 20px !important;
 }
-.grid-stack-item.ui-resizable-autohide .edit-content {
+  .grid-stack-item.ui-resizable-autohide .edit-content {
   display: none;
 }
 

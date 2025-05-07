@@ -133,20 +133,106 @@
           </div>
           <div id="content-custom-text" class="content-type-section hidden">
             <div class="flex flex-col px-.5 w-full">
-              <label class="pb-2">Enter value </label>
-              <input
-                type="text"
-                class="content-value border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div class="pb-1">
+                <label>Enter value </label>
+                <input
+                  type="text"
+                  class="content-value border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div class="pb-1">
+                <label>Text color</label>
+                <div>
+                  <input type="color" class="content-text-color" name="head" value="#FFFFF" />
+                </div>
+              </div>
+              <div class="pb-1">
+                <label>Text size</label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    class="content-text-size border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <span class="absolute right-3 top-1.5 opacity-65">px</span>
+                </div>
+              </div>
+              <div class="pb-1">
+                <label>Padding</label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    class="content-padding border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <span class="absolute right-3 top-1.5 opacity-65">px</span>
+                </div>
+              </div>
+              <div class="pb-1">
+                <label>Margin</label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    class="content-margin border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <span class="absolute right-3 top-1.5 opacity-65">px</span>
+                </div>
+              </div>
+              <div class="pb-1">
+                <label>Border radius</label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    class="content-border-radius border text-sm rounded-lg block w-full p-2 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <span class="absolute right-3 top-1.5 opacity-65">px</span>
+                </div>
+              </div>
+              <div class="pb-1">
+                <label>Horizontal alignment</label>
+                <select
+                  class="content-horizontal-alignment border text-sm rounded-lg block w-full p-2.5 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="start">Left</option>
+                  <option value="center">Center</option>
+                  <option value="end">Right</option>
+                </select>
+              </div>
+              <div class="pb-1">
+                <label>Vertical alignment</label>
+                <select
+                  class="content-vertical-alignment border text-sm rounded-lg block w-full p-2.5 bg-gray-800 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="start">Top</option>
+                  <option value="center">Center</option>
+                  <option value="end">Bottom</option>
+                </select>
+              </div>
             </div>
           </div>
           <div id="content-custom-image" class="content-type-section hidden">image</div>
           <div id="content-monitoring-value" class="content-type-section hidden">value</div>
-          <div class="py-3">
+          <div class="py-3 hidden content-save-wrapper">
+            <div class="pb-1">
+              <label>Choose background properties</label>
+              <div>
+                <input type="color" class="content-bg-color" name="head" value="#FFFFF" />
+                <input
+                  id="minmax-range"
+                  type="range"
+                  min="0"
+                  max="10"
+                  value="7"
+                  class="content-bg-opacity w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-700"
+                />
+              </div>
+            </div>
             <button
               id="content-save"
               data-grid=""
-              class="hidden w-full cursor-pointer transition duration-150 hover:bg-blue-100 hover:text-black border py-1 px-2 rounded"
+              class="w-full cursor-pointer transition duration-150 hover:bg-blue-100 hover:text-black border py-1 px-2 rounded"
             >
               Apply customization
             </button>
@@ -169,7 +255,10 @@
           <div id="grid-container" class="grid-softlines !overflow-visible">
             <div id="grid-stack"></div>
           </div>
-          <canvas id="background-canvas" class="absolute left-0 top-0 w-full h-full bg-black/40 -z-5"></canvas>
+          <canvas
+            id="background-canvas"
+            class="absolute left-0 top-0 w-full h-full bg-black/40 -z-5"
+          ></canvas>
         </div>
         <div class="flex flex-col gap-2 w-full">
           <div id="tools-menu" class="bg-gray-800/80 rounded">
@@ -177,7 +266,7 @@
               <div class="pb-2 mb-2">
                 <h2 class="text-xs pb-2">Layouting</h2>
                 <div class="flex flex-wrap gap-2 justify-between">
-                  <div class="block-dragable-in !w-[60px] border cursor-grab">
+                  <div class="block-dragable-in !w-[60px] cursor-grab">
                     <div class="bg-white/30 !h-[40px] flex justify-center items-center text-xs">
                       Block
                     </div>

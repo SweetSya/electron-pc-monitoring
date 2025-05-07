@@ -8,6 +8,25 @@ import { Swiper } from 'swiper'
 
 function init() {
   window.addEventListener('DOMContentLoaded', () => {
+    function hexToRgba(hex, alpha = 1) {
+      // Remove '#' if present
+      hex = hex.replace(/^#/, '')
+
+      // Handle shorthand hex (e.g., "#abc")
+      if (hex.length === 3) {
+        hex = hex
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      }
+
+      const bigint = parseInt(hex, 16)
+      const r = (bigint >> 16) & 255
+      const g = (bigint >> 8) & 255
+      const b = bigint & 255
+
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`
+    }
     const local_get = (key) => {
       return JSON.parse(localStorage.getItem(key))
     }
@@ -54,6 +73,7 @@ function init() {
     const drawerTargetEl = document.getElementById('drawer-edit')
     const drawerContentTypeSelect = drawerTargetEl.querySelector('#content-type')
     const buttonContentSave = drawerTargetEl.querySelector('#content-save')
+    const contentSaveWrapper = drawerTargetEl.querySelector('.content-save-wrapper')
     drawerContentTypeSelect.addEventListener('change', (e) => {
       // remove all shown
       drawerTargetEl.querySelectorAll('.content-type-section.flex').forEach((item) => {
@@ -62,11 +82,11 @@ function init() {
       })
       if (!e.target.value || e.target.value === '') {
         // remove btn
-        buttonContentSave.classList.add('hidden')
+        contentSaveWrapper.classList.add('hidden')
         return
       }
       // add btn
-      buttonContentSave.classList.remove('hidden')
+      contentSaveWrapper.classList.remove('hidden')
       // add flex
       let section = drawerTargetEl.querySelector(`#content-${e.target.value}`)
       section.classList.add('flex')
@@ -80,23 +100,20 @@ function init() {
       bodyScrolling: false,
       edge: false,
       edgeOffset: '',
-      backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+      backdropClasses: 'pointer-events-none bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
       onHide: () => {
         // Remove editing box id
         delete drawerTargetEl.dataset.editing
         drawerContentTypeSelect.value = ''
+        contentSaveWrapper.classList.add('hidden')
         drawerTargetEl.querySelectorAll('.content-type-section.flex').forEach((item) => {
           item.classList.remove('flex')
           item.classList.add('hidden')
         })
         local_set('grids', all_grid_content())
       },
-      onShow: () => {
-        console.log('drawer is shown')
-      },
-      onToggle: () => {
-        console.log('drawer has been toggled')
-      }
+      onShow: () => {},
+      onToggle: () => {}
     }
 
     // instance options object
@@ -116,17 +133,12 @@ function init() {
       backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
       closable: true,
       onHide: () => {
-        console.log('modal is hidden')
         // delete image
         document.querySelector('#background-cropper').src
         document.querySelector('#background-input').value = ''
       },
-      onShow: () => {
-        console.log('modal is shown')
-      },
-      onToggle: () => {
-        console.log('modal has been toggled')
-      }
+      onShow: () => {},
+      onToggle: () => {}
     }
 
     // instance options object
@@ -179,13 +191,78 @@ function init() {
     document.querySelector('.close-drawer-edit').addEventListener('click', () => {
       drawer.hide()
     })
+    // Save config to content
     buttonContentSave.addEventListener('click', (e) => {
       // get content
-      let content_value = drawerTargetEl.querySelector('.content-type-section.flex .content-value')
-        ? drawerTargetEl.querySelector('.content-type-section.flex .content-value').value
-        : ''
       let id_box = e.currentTarget.dataset.grid
-      document.querySelector(`#${id_box} .box-content`).innerHTML = content_value
+      const content_data = {
+        value:
+          drawerTargetEl.querySelector('.content-type-section.flex .content-value').value ?? '',
+        properties: [
+          {
+            target: `#${id_box} .box-content`,
+            key: 'color',
+            value:
+              drawerTargetEl.querySelector('.content-type-section.flex .content-text-color')
+                .value ?? 'white'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'fontSize',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-text-size').value}px` ??
+              '0px'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'padding',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-padding').value}px` ??
+              '0px'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'borderRadius',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-border-radius').value}px` ??
+              '0px'
+          },
+          {
+            target: `#${id_box} .grid-stack-item-content`,
+            key: 'padding',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-margin').value}px` ??
+              '0px'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'justifyContent',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-horizontal-alignment').value}` ??
+              'start'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'alignItems',
+            value:
+              `${drawerTargetEl.querySelector('.content-type-section.flex .content-vertical-alignment').value}` ??
+              'start'
+          },
+          {
+            target: `#${id_box} .box-content`,
+            key: 'backgroundColor',
+            value: hexToRgba(
+              contentSaveWrapper.querySelector('.content-bg-color').value,
+              contentSaveWrapper.querySelector('.content-bg-opacity').value / 10
+            )
+          }
+        ]
+      }
+      document.querySelector(`#${id_box} .box-content`).innerHTML = content_data.value
+      // Loop over properties
+      content_data.properties.forEach((property) => {
+        document.querySelector(property.target).style[property.key] = property.value
+      })
       drawer.hide()
     })
     grid.on('removed', (event, items) => {
@@ -203,11 +280,12 @@ function init() {
       let edit_buttons = document.querySelectorAll('.edit-content')
       edit_buttons[edit_buttons.length - 1].addEventListener('click', (e) => {
         let box_id = e.target.parentElement.parentElement.id
-        let grid_boxes = local_get('grid_boxes') || []
+        let grid_boxes = local_get('grids') || []
         const item = grid_boxes.find((obj) => obj.id === box_id)
         if (item) {
           // Prepare drawer here
           console.log('prepare drawer')
+          console.log(item)
         }
         drawerTargetEl.querySelector('#content-save').dataset.grid = box_id
         drawer.show()
@@ -215,7 +293,6 @@ function init() {
     })
     grid.on('change', (event, items) => {
       local_set('grids', all_grid_content())
-      console.log(all_grid_content())
     })
     // Toogle trash box
     const toogleTrash = (state) => {
@@ -242,8 +319,8 @@ function init() {
     const cropperOptions = {
       cropBoxResizable: true,
       data: {
-        width: 480 / 2,
-        height: 320 / 2
+        width: 480,
+        height: 320
       },
       dragMode: 'none',
       center: true
@@ -278,7 +355,6 @@ function init() {
       // Convert to base64 image
       const base64CroppedImage = canvas.toDataURL('image/png')
       let temp = local_get('canvas')
-      console.log(temp)
       temp.background = base64CroppedImage
       local_set('canvas', temp)
       setBackgroundCanvas()
@@ -307,21 +383,30 @@ function init() {
           w: node.w * eachBlock.width,
           h: node.h * eachBlock.height
         },
-        class: '',
-        background: '',
-        content: document.querySelector(`#${node.el.id}`).innerHTML
+        content: document.querySelector(`#${node.el.id}`).innerHTML,
+        properties: {
+          borderRadius: document.querySelector(`#${node.el.id}`).style.borderRadius,
+          backgroundColor: document.querySelector(`#${node.el.id} .box-content`).style
+            .backgroundColor,
+          padding: document.querySelector(`#${node.el.id} .box-content`).style.padding,
+          text: {
+            size: document.querySelector(`#${node.el.id} .box-content`).style.fontSize,
+            color: document.querySelector(`#${node.el.id} .box-content`).style.color
+          }
+        }
       }))
     }
 
     // Check for local storage
     if (!local_get('canvas')) {
       local_set('canvas', { background: '' })
+    } else {
+      setBackgroundCanvas()
     }
     if (local_get('grids')) {
       local_get('grids').forEach((box) => {
         const div = document.createElement('div')
         div.id = box.id
-        div.classList.add('grid-stack-item')
         div.innerHTML = box.content
         grid.makeWidget(div, {
           x: box.grid.coords.x0,
